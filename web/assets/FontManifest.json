@@ -1,0 +1,26 @@
+[
+  {
+    "family" : "MaterialIcons",
+    "fonts": [
+      {
+        "asset" : "MaterialIcons-Regular.ttf"
+      }
+    ]
+  },
+  {
+    "family": "Roboto",
+    "fonts": [
+      {
+        "asset": "font/Roboto/Roboto-Regular.ttf"
+      },
+      {
+        "asset": "font/Roboto/Roboto-Italic.ttf",
+        "style" : "italic"
+      },
+      {
+        "asset": "font/Roboto/Roboto-Bold.ttf",
+        "weight": "bold"
+      }
+    ]
+  }
+]
