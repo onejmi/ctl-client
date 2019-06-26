@@ -1,4 +1,4 @@
-# CTL CLIENT
+# CTL Client
 Flutter (Web) application which interfaces with [ctl-server](http://github.com/scarger/ctl-server)
 
 ### What's done?
