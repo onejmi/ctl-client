@@ -2,6 +2,8 @@ import 'package:flutter_web/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:ctl_client/routes/profile.dart';
+
 class LoginWidget extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -15,9 +17,9 @@ class LoginWidgetState extends State<LoginWidget> {
   final emailFieldController = TextEditingController();
   final passwordFieldController = TextEditingController();
 
+  String _sessionID;
   bool isLoading = false;
   bool hasTried = false;
-  String sessionID;
 
   @override
   Widget build(BuildContext context) {
@@ -83,21 +85,14 @@ class LoginWidgetState extends State<LoginWidget> {
                                 child: Text("Login"),
                               ),
                             ),
-                            sessionID == null
-                                ? hasTried == false
-                                    ? null
-                                    : Padding(
-                                        padding: EdgeInsets.only(top: 15.0),
-                                        child: Text(
-                                          "Incorrect details",
-                                          style: TextStyle(color: Colors.red),
-                                        ))
-                                : Padding(
+                            hasTried == true && _sessionID == null
+                                ? Padding(
                                     padding: EdgeInsets.only(top: 15.0),
                                     child: Text(
-                                      "Success: $sessionID",
-                                      style: TextStyle(color: Colors.green),
+                                      "Incorrect details",
+                                      style: TextStyle(color: Colors.red),
                                     ))
+                                : null
                           ].where((widget) => widget != null).toList(),
                         ),
                       ),
@@ -115,9 +110,16 @@ class LoginWidgetState extends State<LoginWidget> {
       body: json.encode({"email": email, "password": password}),
     );
     setState(() {
-      sessionID = json.decode(response.body)["session_id"];
+      _sessionID = json.decode(response.body)["session_id"];
       isLoading = false;
       hasTried = true;
+
+      if (_sessionID != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Profile(_sessionID)),
+        );
+      }
     });
   }
 }
