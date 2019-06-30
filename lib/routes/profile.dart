@@ -1,6 +1,20 @@
+import 'package:ctl_client/routes/component/claim.dart';
 import 'package:flutter_web/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+class InheritedSession extends InheritedWidget {
+  final String sessionID;
+
+  InheritedSession({this.sessionID, Widget child}) : super(child: child);
+
+  @override
+  bool updateShouldNotify(InheritedWidget oldWidget) => true;
+
+  static of(BuildContext context) {
+    return context.inheritFromWidgetOfExactType(InheritedSession);
+  }
+}
 
 class Profile extends StatefulWidget {
   final String _sessionID;
@@ -8,16 +22,14 @@ class Profile extends StatefulWidget {
   Profile(this._sessionID);
 
   @override
-  _ProfileState createState() => _ProfileState(_sessionID);
+  _ProfileState createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
-  final String _sessionID;
-
   Map<String, dynamic> _userCache;
   bool isLoaded = false;
 
-  _ProfileState(this._sessionID);
+  _ProfileState();
 
   @override
   void initState() {
@@ -35,7 +47,10 @@ class _ProfileState extends State<Profile> {
         ),
       ),
       body: isLoaded
-          ? ProfileDisplay(_userCache)
+          ? InheritedSession(
+              sessionID: widget._sessionID,
+              child: ProfileDisplay(_userCache),
+            )
           : Center(
               child: CircularProgressIndicator(),
             ),
@@ -43,8 +58,9 @@ class _ProfileState extends State<Profile> {
   }
 
   Future<void> loadUser() async {
+    final String sessionID = widget._sessionID;
     final response = await http
-        .get("http://localhost:8081/profile", headers: {"Session": _sessionID});
+        .get("http://localhost:8081/profile", headers: {"Session": sessionID});
     setState(() {
       _userCache = json.decode(response.body);
       isLoaded = true;
@@ -85,14 +101,15 @@ class ProfileDisplay extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            ProfileComponent(
-                                "Last Claimed", profileData.lastClaimTime.toString()),
+                            ProfileComponent("Last Claimed",
+                                profileData.lastClaimTime.toString()),
                           ],
                         ),
                       ],
                     ),
                   ),
                 ),
+                ClaimView(),
               ],
             ),
           ),
