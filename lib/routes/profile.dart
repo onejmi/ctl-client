@@ -34,10 +34,11 @@ class _ProfileState extends State<Profile> {
           child: Text("CTL Client"),
         ),
       ),
-      body: Center(
-        child:
-            isLoaded ? ProfileDisplay(_userCache) : CircularProgressIndicator(),
-      ),
+      body: isLoaded
+          ? ProfileDisplay(_userCache)
+          : Center(
+              child: CircularProgressIndicator(),
+            ),
     );
   }
 
@@ -59,13 +60,43 @@ class ProfileDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Column(
-        children: <Widget>[
-          Text("Name: ${profileData.username}"),
-          Text("Email: ${profileData.email}"),
-          Text("lastClaim: ${profileData.lastClaimTime}"),
-        ],
+    return SizedBox.expand(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: <Widget>[
+                Card(
+                  color: Colors.deepOrange,
+                  child: Container(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            ProfileComponent("Name", profileData.username),
+                            ProfileComponent("Email", profileData.email),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            ProfileComponent(
+                                "Last Claimed", profileData.lastClaimTime.toString()),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -82,4 +113,40 @@ class ProfileData {
       : username = json['username'],
         email = json['email'],
         lastClaimTime = json['time'];
+}
+
+class ProfileComponent extends StatelessWidget {
+  final String _title;
+  final String _content;
+
+  ProfileComponent(this._title, this._content);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          children: <Widget>[
+            Text(
+              _title,
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+            Text(
+              _content,
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.blueGrey,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
