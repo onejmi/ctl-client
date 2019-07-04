@@ -1,3 +1,4 @@
+import 'package:ctl_client/routes/register.dart';
 import 'package:flutter_web/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -92,7 +93,24 @@ class LoginWidgetState extends State<LoginWidget> {
                                       "Incorrect details",
                                       style: TextStyle(color: Colors.red),
                                     ))
-                                : null
+                                : null,
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: InkWell(
+                                child: Text(
+                                  "Register",
+                                  style: TextStyle(color: Colors.lightBlue),
+                                ),
+                                onTap: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => RegisterWidget(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
                           ].where((widget) => widget != null).toList(),
                         ),
                       ),
