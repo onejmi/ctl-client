@@ -124,7 +124,7 @@ class RegisterWidgetState extends State<RegisterWidget> {
     final response = await http.post(
       'http://localhost:8081/register',
       body: json
-          .encode({"email": email, "username": username, "password": password}),
+          .encode({"email": email.toLowerCase(), "username": username, "password": password}),
     );
     setState(() {
       _email = json.decode(response.body)["email"];
